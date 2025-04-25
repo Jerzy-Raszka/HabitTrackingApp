@@ -8,7 +8,7 @@ import java.util.List;
 @Document("Day")
 public class Day {
     private final String date;
-    private final List<Integer> fulfilledHabits;
+    private final List<String> fulfilledHabits;
 
     public Day(String data) {
         this.date = data;
@@ -19,11 +19,11 @@ public class Day {
         return date;
     }
 
-    public List<Integer> getFulfilledHabits() {
+    public List<String> getFulfilledHabits() {
         return fulfilledHabits;
     }
 
-    public void addHabit(int habitID) {
+    public void addHabit(String habitID) {
         this.fulfilledHabits.add(habitID);
     }
 }
