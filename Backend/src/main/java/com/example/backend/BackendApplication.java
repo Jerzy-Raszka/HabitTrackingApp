@@ -19,8 +19,8 @@ public class BackendApplication implements CommandLineRunner {
 
     final HabitRepository habitRepo;
     final DayRepository dayRepo;
-    List<Habits> habitsList = new ArrayList<Habits>();
-    List<String> fulfilledHabitsList = new ArrayList<String>();
+    List<Habits> habitsList = new ArrayList<>();
+    List<String> fulfilledHabitsList = new ArrayList<>();
 
     public BackendApplication(HabitRepository habitRepo, DayRepository dayRepo) {
         this.habitRepo = habitRepo;
@@ -67,8 +67,6 @@ public class BackendApplication implements CommandLineRunner {
 
     public void fulfilledHabit(String dayId) {
         Optional<Day> day = dayRepo.findById(dayId);
-        day.ifPresent((Day habitFulfilled) -> {
-            fulfilledHabitsList = habitFulfilled.getFulfilledHabits();
-        });
+        day.ifPresent((Day habitFulfilled) -> fulfilledHabitsList = habitFulfilled.getFulfilledHabits());
     }
 }
