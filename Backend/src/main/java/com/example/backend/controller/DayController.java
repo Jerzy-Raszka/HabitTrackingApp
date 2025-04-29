@@ -10,6 +10,9 @@ import java.util.Optional;
 
 @RestController
 public class DayController {
+
+    //TODO: add REST API and DTO
+
     final DayRepository dayRepo;
     List<String> fulfilledHabitsList = new ArrayList<>();
 

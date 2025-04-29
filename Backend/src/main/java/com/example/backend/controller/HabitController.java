@@ -2,39 +2,52 @@ package com.example.backend.controller;
 
 import com.example.backend.model.Habits;
 import com.example.backend.repository.HabitRepository;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-//TODO:  Rest 
 @RestController
 public class HabitController {
     final HabitRepository habitRepo;
-    List<Habits> habitsList = new ArrayList<>();
+    List<Habits> habits = new ArrayList<>();
 
     public HabitController(HabitRepository habitRepo) {
         this.habitRepo = habitRepo;
     }
 
-    public void createHabit(String label) {
-        habitRepo.save(new Habits(label));
+    @GetMapping("/")
+    public ResponseEntity<List<Habits>> getAllHabits() {
+        habits = habitRepo.findAll();
+        return ResponseEntity.ok(habits);
     }
 
-    public void getHabits() {
-        habitsList = habitRepo.findAll();
+    @PostMapping("/")
+    public ResponseEntity<Habits> addHabit(@RequestParam String label) {
+        Habits habit = new Habits(label);
+        habit = habitRepo.save(habit);
+        return ResponseEntity.ok(habit);
     }
 
-    public void deleteHabit(String id) {
+    @DeleteMapping("/")
+    public ResponseEntity<Void> deleteHabit(@RequestParam String id) {
+        if (!habitRepo.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
         habitRepo.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
-    public void editHabit(String id, String label) {
-        Optional<Habits> habit = habitRepo.findById(id);
-        habit.ifPresent((Habits habitToUpdate) -> {
-            habitToUpdate.setLabel(label);
-            habitRepo.save(habitToUpdate);
-        });
+    @PatchMapping("/")
+    public ResponseEntity<Habits> updateHabit(@RequestParam String id, @RequestParam String label) {
+        Habits habit = habitRepo.findById(id).orElse(null);
+        if (habit != null) {
+            habit.setLabel(label);
+            return ResponseEntity.ok(habitRepo.save(habit));
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
 }
