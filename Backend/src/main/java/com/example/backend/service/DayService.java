@@ -36,6 +36,7 @@ public class DayService {
         Day modifiedDay = dayRepository.findById(dayId).orElse(null);
         if (modifiedDay != null) {
             modifiedDay.removeHabit(habitId);
+            dayRepository.save(modifiedDay);
             return ResponseEntity.noContent().build();
         } else {
             return ResponseEntity.notFound().build();
