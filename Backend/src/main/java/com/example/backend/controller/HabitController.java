@@ -2,52 +2,41 @@ package com.example.backend.controller;
 
 import com.example.backend.model.Habits;
 import com.example.backend.repository.HabitRepository;
+import com.example.backend.service.HabitService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @RestController
 public class HabitController {
     final HabitRepository habitRepo;
-    List<Habits> habits = new ArrayList<>();
+    final HabitService habitService;
 
-    public HabitController(HabitRepository habitRepo) {
+    public HabitController(HabitRepository habitRepo, HabitService habitService) {
         this.habitRepo = habitRepo;
+        this.habitService = habitService;
     }
 
-    @GetMapping("/")
+
+    @GetMapping("/Habit")
     public ResponseEntity<List<Habits>> getAllHabits() {
-        habits = habitRepo.findAll();
-        return ResponseEntity.ok(habits);
+        return habitService.getAllHabits();
     }
 
-    @PostMapping("/")
+    @PostMapping("/Habit")
     public ResponseEntity<Habits> addHabit(@RequestParam String label) {
-        Habits habit = new Habits(label);
-        habit = habitRepo.save(habit);
-        return ResponseEntity.ok(habit);
+        return habitService.addHabit(label);
     }
 
-    @DeleteMapping("/")
+    @DeleteMapping("/Habit")
     public ResponseEntity<Void> deleteHabit(@RequestParam String id) {
-        if (!habitRepo.existsById(id)) {
-            return ResponseEntity.notFound().build();
-        }
-        habitRepo.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return habitService.deleteHabit(id);
     }
 
-    @PatchMapping("/")
+    @PatchMapping("/Habit")
     public ResponseEntity<Habits> updateHabit(@RequestParam String id, @RequestParam String label) {
-        Habits habit = habitRepo.findById(id).orElse(null);
-        if (habit != null) {
-            habit.setLabel(label);
-            return ResponseEntity.ok(habitRepo.save(habit));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return habitService.updateHabit(id, label);
     }
 
 }

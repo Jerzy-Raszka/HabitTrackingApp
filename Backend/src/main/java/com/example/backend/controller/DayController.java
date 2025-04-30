@@ -2,35 +2,43 @@ package com.example.backend.controller;
 
 import com.example.backend.model.Day;
 import com.example.backend.repository.DayRepository;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import com.example.backend.service.DayService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class DayController {
 
-    //TODO: add REST API and DTO
-
     final DayRepository dayRepo;
-    List<String> fulfilledHabitsList = new ArrayList<>();
+    final DayService dayService;
 
-    public DayController(DayRepository dayRepo) {
+    public DayController(DayRepository dayRepo, DayService dayService) {
         this.dayRepo = dayRepo;
+        this.dayService = dayService;
     }
 
-    public void addFulfilledHabit(String date, String id) {
-        Day day = dayRepo.findFirstByDate(date);
-        day.addHabit(id);
+    @GetMapping("/Day")
+    public ResponseEntity<Day> getDayByDate(@RequestParam String date) {
+        return dayService.getDayByDate(date);
     }
 
-    public void addDay(String date) {
-        dayRepo.save(new Day(date));
+    @PostMapping("/Day")
+    public ResponseEntity<Day> addDay(@RequestParam String date) {
+        return dayService.addDay(date);
     }
 
-    public void fulfilledHabit(String dayId) {
-        Optional<Day> day = dayRepo.findById(dayId);
-        day.ifPresent((Day habitFulfilled) -> fulfilledHabitsList = habitFulfilled.getFulfilledHabits());
+    @PatchMapping("/DayAddHabit")
+    public ResponseEntity<Day> addFulfilledHabit(@RequestParam String dayId, @RequestParam String habitId) {
+        return dayService.addFulfilledHabit(dayId, habitId);
+    }
+
+    @PatchMapping("/DayRemoveHabit")
+    public ResponseEntity<Day> removeFulfilledHabit(@RequestParam String dayId, @RequestParam String habitId) {
+        return dayService.removeFulfilledHabit(dayId, habitId);
+    }
+
+    @DeleteMapping("/Day")
+    public ResponseEntity<Void> deleteDay(@RequestParam String dayId) {
+        return dayService.deleteDay(dayId);
     }
 }

@@ -5,7 +5,6 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("Habits")
 public class Habits {
-    //TODO: implement DTO and remove set and get
     @Id
     private String id;
     private String habitLabel;
@@ -14,6 +13,12 @@ public class Habits {
         this.habitLabel = habitLabel;
     }
 
+    //Used for sake of serialization
+    public String getId() {
+        return id;
+    }
+
+    //Used for sake of serialization
     public String getLabel() {
         return habitLabel;
     }
@@ -22,7 +27,5 @@ public class Habits {
         this.habitLabel = habitLabel;
     }
 
-    public String getId() {
-        return id;
-    }
+
 }
